@@ -3,7 +3,7 @@ const router = express.Router();
 const createError = require('http-errors');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const User = require('../models/user');
+const User = require('../models/User');
 
 // HELPER FUNCTIONS
 const {
@@ -19,26 +19,20 @@ router.get('/me', isLoggedIn, (req, res, next) => {
 });
 
 //  POST    '/signup'
-router.post(
-  '/signup',
-  isNotLoggedIn,
-  validationLoggin,
-  async (req, res, next) => {
-    const { username, password } = req.body;
-
+router.post( '/signup', isNotLoggedIn, validationLoggin, async (req, res, next) => {
+    const { email, name, lastName, password } = req.body;
     try {
-      // projection
-      const usernameExists = await User.findOne({ username }, 'username');
+      const userExists = await User.findOne({ email }, 'email');
 
-      if (usernameExists) return next(createError(400));
+      if (userExists) return next(createError(400));
       else {
-        const salt = bcrypt.genSaltSync(saltRounds);
-        const hashPass = bcrypt.hashSync(password, salt);
-        const newUser = await User.create({ username, password: hashPass });
+        const salt = bcrypt.genSaltSync(saltRounds);                          // create slat
+        const hashPass = bcrypt.hashSync(password, salt);                     // encrypt password
+        const newUser = await User.create({ email, name, lastName, password: hashPass });  // create user
         req.session.currentUser = newUser;
-        res
-          .status(200) //  OK
-          .json(newUser);
+        res.status(200).json(newUser);  // 200 OK
+        console.log('----------> signed up!');
+        console.log('----------> newUser', newUser);     
       }
     } catch (error) {
       next(error);
@@ -47,19 +41,17 @@ router.post(
 );
 
 //  POST    '/login'
-router.post(
-  '/login',
-  isNotLoggedIn,
-  validationLoggin,
-  async (req, res, next) => {
-    const { username, password } = req.body;
+router.post( '/login', isNotLoggedIn, validationLoggin, async (req, res, next) => {
+    const { email, password } = req.body;
     try {
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ email });
       if (!user) {
         next(createError(404));
       } else if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
         res.status(200).json(user);
+        console.log('----------> logged in!');
+        console.log('----------> user logged in', user); 
         return;
       } else {
         next(createError(401));
@@ -72,11 +64,12 @@ router.post(
 
 //  POST    '/logout'
 router.post('/logout', isLoggedIn, (req, res, next) => {
-  const { username } = req.session.currentUser;
+  
+  const { email } = req.session.currentUser;
   req.session.destroy();
   res
     .status(200) //  No Content
-    .json({ message: `User '${username}' logged out - session destroyed` });
+    .json({ message: `User with '${email}' logged out - session destroyed` });
   return;
 });
 

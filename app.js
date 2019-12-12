@@ -9,7 +9,8 @@ const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 require('dotenv').config();
 
-const auth = require('./routes/auth');
+const publicRouter = require('./routes/index');
+const privateRouter = require('./routes/private');
 
 
 // MONGOOSE CONNECTION
@@ -17,6 +18,7 @@ mongoose
   .connect(process.env.MONGODB_URI, {
     keepAlive: true,
     useNewUrlParser: true,
+    useFindAndModify: false,
     reconnectTries: Number.MAX_VALUE,
   })
   .then( () => console.log(`Connected to database`))
@@ -67,7 +69,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // ROUTER MIDDLEWARE
-app.use('/auth', auth);
+app.use('/', publicRouter);
+app.use('/',privateRouter);
 
 
 // ERROR HANDLING
