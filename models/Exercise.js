@@ -9,7 +9,7 @@ const exerciseSchema = new Schema({
   type: {type: String, required: true},
   video_url: {type: String},
   img_url: {type: String},
-  public: {type: Boolean},
+  share: {type: Boolean},
   author: {type: Schema.Types.ObjectId, ref:'User'}
 });
 

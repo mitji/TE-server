@@ -55,7 +55,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
   // FILTER //
 
   try {
-    const allExercises = await Exercise.find({public: true, author: {$ne: userId}}).and([filter]).populate('author', 'name lastName'); // populate author but get only name and lastName (+ id by default)
+    const allExercises = await Exercise.find({share: true, author: {$ne: userId}}).populate('author', 'name lastName'); // populate author but get only name and lastName (+ id by default)
     res.status(200).json(allExercises);
   }
   catch(user) {

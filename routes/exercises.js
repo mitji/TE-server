@@ -23,12 +23,12 @@ router.get('/new', isLoggedIn, (req, res, next) => {
 
 // POST /exercises/new
 router.post('/new', isLoggedIn, async (req, res, next) => {
-  const {title, description, duration, sport, type, video_url, img_url, public} = req.body;
+  const {title, description, duration, sport, type, video_url, img_url, share} = req.body;
   const userId = req.session.currentUser._id;
  
   try {
     // add exercise to db
-    const newExercise = await Exercise.create({title, description, duration, sport, type, video_url, img_url, public, author: userId});
+    const newExercise = await Exercise.create({title, description, duration, sport, type, video_url, img_url, share, author: userId});
     
     // add exercise to user exercises array
     User.findById(userId)
@@ -61,10 +61,10 @@ router.get('/:exerciseId', isLoggedIn, async (req, res, next) => {
 
 // PUT /exercises/:exerciseId- update exercise
 router.put('/:exerciseId', isLoggedIn, async (req, res, next) => {
-  const {title, description, duration, sport, type, video_url, img_url, public} = req.body;
+  const {title, description, duration, sport, type, video_url, img_url, share} = req.body;
   const {exerciseId} = req.params;
   try {
-    const updatedExercise = await Exercise.findByIdAndUpdate({_id: exerciseId},{title, description, duration, sport, type, video_url, img_url, public}, {new: true});
+    const updatedExercise = await Exercise.findByIdAndUpdate({_id: exerciseId},{title, description, duration, sport, type, video_url, img_url, share}, {new: true});
     res.status(200).json(updatedExercise);  // 200 OK
   } catch (error) {
     next(error);

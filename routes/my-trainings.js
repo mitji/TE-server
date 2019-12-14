@@ -116,7 +116,7 @@ router.post('/:trainingId/:exerciseId', isLoggedIn, async (req, res, next) => {
       type: exercise.type, 
       video_url: exercise.video_url, 
       img_url: exercise.img_url, 
-      public: false, 
+      share: false, 
       author: exercise.author});
       // find training
       const training = await Training.findById(trainingId);
