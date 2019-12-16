@@ -12,12 +12,6 @@ const {
   validationLoggin,
 } = require('../helpers/middlewares');
 
-
-// GET /my-trainings/new
-router.get('/new', isLoggedIn, (req, res, next) => {
-  res.status(200).json({message: "let's add a new training!"});
-});
-
 // POST /my-trainings/new
 router.post('/new', isLoggedIn, async (req, res, next) => {
   
@@ -35,7 +29,7 @@ router.post('/new', isLoggedIn, async (req, res, next) => {
       user.trainings.push(newTraining);
       User.findByIdAndUpdate({_id: userId}, {trainings: user.trainings}, {new: true}).populate('trainings')
       .then( (updatedUser) => {
-        res.status(201).json(updatedUser.trainings);
+        res.status(201).json(newTraining);
       })
       .catch(err => console.log(err));
     })
@@ -63,10 +57,10 @@ router.get('/:trainingId', isLoggedIn, async (req, res, next) => {
 
 // PUT /my-trainings/:trainingId - update training
 router.put('/:trainingId', isLoggedIn, async (req, res, next) => {
-  const { title, description, duration, sport, type } = req.body;
+  const { title, description, duration, sport } = req.body;
   const {trainingId} = req.params;
   try {
-    const updatedTraining = await Training.findByIdAndUpdate({_id: trainingId}, { title, description, duration, sport, type }, {new: true}).populate('exercises');
+    const updatedTraining = await Training.findByIdAndUpdate({_id: trainingId}, { title, description, duration, sport }, {new: true}).populate('exercises');
     console.log('\n\n UPDATED TRAINING --- ', updatedTraining);
     // find all trainings and send those?
     res.status(200).json(updatedTraining);
@@ -125,7 +119,7 @@ router.post('/:trainingId/:exerciseId', isLoggedIn, async (req, res, next) => {
       // update training object with new exercise
       const updatedTraining = await Training.findByIdAndUpdate({_id:trainingId}, {exercises: training.exercises}, {new: true}).populate('exercises');
       res.status(200).json(updatedTraining);
-    } 
+    }
   catch(error) {
     next(error);
   }
@@ -139,7 +133,7 @@ router.put('/:trainingId/:exerciseId', isLoggedIn, async (req, res, next) => {
   try {
     const updatedExercise = await Exercise.findByIdAndUpdate({_id:exerciseId}, {title, description, duration, sport, type, video_url, img_url}, {new: true}).populate('exercises');
     res.status(200).json(updatedExercise);
-  } 
+  }
   catch(error) {
     next(error);
   }
