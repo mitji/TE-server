@@ -69,7 +69,7 @@ router.put('/:trainingId', isLoggedIn, async (req, res, next) => {
   }
 });
 
-// DELETE /my-trainings/:trainingId/edit - delete training
+// DELETE /my-trainings/:trainingId - delete training
 router.delete('/:trainingId',isLoggedIn, async (req, res, next) => {
   const {trainingId} = req.params;
   const userId = req.session.currentUser._id;
