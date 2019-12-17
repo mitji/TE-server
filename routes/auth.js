@@ -14,7 +14,6 @@ const {
 
 //  GET    '/me'
 router.get('/me', isLoggedIn, (req, res, next) => {
-  req.session.currentUser.password = '*';
   res.json(req.session.currentUser);
 });
 
@@ -72,6 +71,18 @@ router.post('/logout', isLoggedIn, (req, res, next) => {
     .json({ message: `User with '${email}' logged out - session destroyed` });
   return;
 });
+
+// PUT '/me'
+router.put('/me', isLoggedIn, async (req, res, next) => {
+  const { email, name, lastName, password } = req.body;
+  const userId = req.session.currentUser._id;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, { email, name, lastName, password }, {new: true});
+    res.status(200).json(updatedUser);  // 200 OK  
+  } catch (error) {
+    next(error);
+  }
+})
 
 //  GET    '/private'   --> Only for testing - Same as /me but it returns a message instead
 router.get('/private', isLoggedIn, (req, res, next) => {
