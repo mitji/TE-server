@@ -69,8 +69,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // ROUTER MIDDLEWARE
-app.use('/', publicRouter);
-app.use('/',privateRouter);
+app.use('/api', publicRouter);
+app.use('/api',privateRouter);
 
 // ROUTE FOR SERVING REACT APP (index.html)
 app.use((req, res, next) => {

@@ -15,7 +15,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
   // return exercises where the title matches the search
   const { search } = req.query;
   try {
-    const foundExs = await Exercise.find({ title: { $regex: search, $options: "i" } })
+    const foundExs = await Exercise.find().and([{ title: { $regex: search, $options: "i" } }, {share: 'true'}])
     res.json(foundExs);
   }
   catch(error) {
