@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const parser = require('./../config/cloudinary');
+
 const User = require('../models/User');
 const Exercise = require('../models/Exercise');
 
