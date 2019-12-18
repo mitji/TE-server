@@ -78,6 +78,7 @@ router.put('/me', isLoggedIn, async (req, res, next) => {
   const userId = req.session.currentUser._id;
   try {
     const updatedUser = await User.findByIdAndUpdate(userId, { email, name, lastName, password }, {new: true});
+    req.session.currentUser = updatedUser;
     res.status(200).json(updatedUser);  // 200 OK  
   } catch (error) {
     next(error);

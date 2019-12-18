@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const trainingSchema = new Schema({
   title: {type: String, required: true},
-  description: {type: String, required: true},
+  description: {type: String},
   duration: {type: String, required: true}, 
   sport: {type: String, required: true},
   exercises: [{type: Schema.Types.ObjectId, ref:'Exercise'}],
