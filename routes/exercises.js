@@ -46,6 +46,16 @@ router.post('/new', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// POST /exercise/new/image - upload exercise image
+router.post('/new/image', parser.single('photo'), (req, res, next) => {
+  console.log('file uploaded');
+  if (!req.file) {
+    next(new Error('No file uploaded!'));
+  };
+  const imageUrl = req.file.secure_url;
+  res.json(imageUrl).status(200);
+});
+
 // GET /exercises/:exerciseId - GO TO A SPECIFIC exercise
 router.get('/:exerciseId', isLoggedIn, async (req, res, next) => {
   const {exerciseId} = req.params;
