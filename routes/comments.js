@@ -46,7 +46,7 @@ router.get('/:exerciseId', isLoggedIn, async (req, res, next) => {
   // get populated comments from exercise id
   try {
     const exercise = await Exercise.findById(exerciseId).populate({path: 'comments', model: 'Comment', populate: {path: 'author', model: 'User', select: 'name lastName'}});
-    res.status(200).json(exercise);
+    res.status(200).json(exercise.comments);
   }
   catch(error) {
     next(error);
