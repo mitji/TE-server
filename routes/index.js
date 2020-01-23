@@ -3,7 +3,6 @@ const router = express.Router();
 const createError = require('http-errors');
 
 const authRouter = require('./auth');
-const privateRouter = require('./private');
 
 router.use('/auth', authRouter);
 

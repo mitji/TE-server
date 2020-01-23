@@ -10,6 +10,7 @@ const exerciseSchema = new Schema({
   video_url: {type: String},
   img_url: {type: String},
   share: {type: Boolean},
+  comments: [{type: Schema.Types.ObjectId, ref:'Comment'}],
   author: {type: Schema.Types.ObjectId, ref:'User'}
 });
 
