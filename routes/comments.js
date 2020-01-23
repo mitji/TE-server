@@ -41,16 +41,41 @@ router.post('/:exerciseId', isLoggedIn, async (req, res, next) => {
 })
 
 // GET /comments/:exerciseId
-router.get('/:id', isLoggedIn, async (req, res, next) => {
-  const id = req.params;
-  console.log(id);
-
-  // get populated comments
-
+router.get('/:exerciseId', isLoggedIn, async (req, res, next) => {
+  const { exerciseId } = req.params;
+  // get populated comments from exercise id
+  try {
+    const exercise = await Exercise.findById(exerciseId).populate({path: 'comments', model: 'Comment', populate: {path: 'author', model: 'User', select: 'name lastName'}});
+    res.status(200).json(exercise);
+  }
+  catch(error) {
+    next(error);
+  }
 })
 
 // DELETE /comments/:commentId
+router.delete('/:exerciseId/:commentId', isLoggedIn, async (req, res, next) => {
+  const { exerciseId, commentId } = req.params;
 
+  try {
+    // delete comment from comments array of exercise
+    const exercise = await Exercise.findById(exerciseId);
+    // get position of comment in comments array
+    const indexOfComment = exercise.comments.indexOf(commentId);
+    // delete comment from array
+    exercise.comments.splice(indexOfComment, 1);
+    // update exercise
+    const updatedExercise = await Exercise.findByIdAndUpdate(exerciseId, {comments: exercise.comments}, {new: true});
+    
+    // delete comment form comments collection
+    await Comment.findByIdAndDelete(commentId);
+
+    res.status(200).json(updatedExercise);
+  }
+  catch(error) {
+    next(error);
+  }
+})
 
 // PUT /comments/:commentId
 
