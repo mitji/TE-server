@@ -65,7 +65,7 @@ router.delete('/:exerciseId/:commentId', isLoggedIn, async (req, res, next) => {
     // delete comment from array
     exercise.comments.splice(indexOfComment, 1);
     // update exercise
-    const updatedExercise = await Exercise.findByIdAndUpdate(exerciseId, {comments: exercise.comments}, {new: true});
+    const updatedExercise =  await Exercise.findByIdAndUpdate(exerciseId, {comments: exercise.comments}, {new: true}).populate('comments');
     
     // delete comment form comments collection
     await Comment.findByIdAndDelete(commentId);
