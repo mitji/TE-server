@@ -70,7 +70,7 @@ router.delete('/:exerciseId/:commentId', isLoggedIn, async (req, res, next) => {
     // delete comment form comments collection
     await Comment.findByIdAndDelete(commentId);
 
-    res.status(200).json(updatedExercise);
+    res.status(200).json(updatedExercise.comments);
   }
   catch(error) {
     next(error);
